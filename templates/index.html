@@ -11,8 +11,8 @@
         <h4>This is a demo websocket app where you cn chat freely.</h4>
         <script type="text/javascript">
         $(document).ready(function() {
-        
-            var socket = io.connect('http://127.0.0.1:5000');
+            const url = location.protocol + '//' + location.hostname + ':' + location.port;
+            var socket = io.connect(url)
         
             socket.on('connect', function() {
                 socket.send('User has connected!');
