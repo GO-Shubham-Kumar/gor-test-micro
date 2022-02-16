@@ -13,7 +13,7 @@
         $(document).ready(function() {
             const url = "https://gor-test-micro.herokuapp.com/";
             console.log(url);
-            var socket = io.connect(url)
+            var socket = io()
         
             socket.on('connect', function() {
                 socket.send('User has connected!');
