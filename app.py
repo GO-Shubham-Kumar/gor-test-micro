@@ -4,6 +4,7 @@ from flask_restful import Resource, Api
 import asyncio
 from flask_socketio import SocketIO, send
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -49,4 +50,4 @@ def websocket():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host="0.0.0.0", port = 5000)
+    socketio.run(app, debug=True, host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
