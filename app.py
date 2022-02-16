@@ -3,6 +3,7 @@ from flask import Flask, jsonify, render_template
 from flask_restful import Resource, Api
 import asyncio
 from flask_socketio import SocketIO, send
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -12,15 +13,25 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 @app.route("/", methods=['GET'])
 @app.route("/sync", methods=['GET'])
 def index():
-    return {"data":"Sync Request Worked!"}
+    now = datetime.now().strftime("%H:%M:%S")
+    return {"data":"Sync Request Worked!", "time":now}
 
 
 @app.route("/async", methods=["GET"])
 def async_req():
+    receiving_time = datetime.now().strftime("%H:%M:%S")
+
     asyncio.set_event_loop(asyncio.new_event_loop())
     loop = asyncio.get_event_loop()
     result = loop.run_until_complete(hello())
-    return jsonify({"result": result}), 200
+
+    sending_time = datetime.now().strftime("%H:%M:%S")
+
+    return jsonify({
+        "data": result, 
+        "receiving_time":receiving_time, 
+        "sending_time": sending_time
+        }), 200
 
 async def hello():
     await asyncio.sleep(5)
