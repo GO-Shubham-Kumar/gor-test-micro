@@ -11,9 +11,9 @@
         <h4>This is a demo websocket app where you cn chat freely.</h4>
         <script type="text/javascript">
         $(document).ready(function() {
-            const url = location.protocol + '//' + document.domain + ':' + location.port;
+            const url = "https://gor-test-micro.herokuapp.com/";
             console.log(url);
-            var socket = io.connect()
+            var socket = io.connect(url)
         
             socket.on('connect', function() {
                 socket.send('User has connected!');
