@@ -5,6 +5,9 @@ import asyncio
 from flask_socketio import SocketIO, send
 from datetime import datetime
 import os
+import pytz
+
+tz_NY = pytz.timezone('Asia/Kolkata')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -14,19 +17,19 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 @app.route("/", methods=['GET', "POST"])
 @app.route("/sync", methods=['GET'])
 def index():
-    now = datetime.now().strftime("%H:%M:%S")
+    now = datetime.now(tz_NY).strftime("%H:%M:%S")
     return {"data":"Sync Request Worked!", "time":now}
 
 
 @app.route("/async", methods=["GET"])
 def async_req():
-    receiving_time = datetime.now().strftime("%H:%M:%S")
+    receiving_time = datetime.now(tz_NY).strftime("%H:%M:%S")
     delta = request.args.get('delta', default=5, type=int)
     asyncio.set_event_loop(asyncio.new_event_loop())
     loop = asyncio.get_event_loop()
     result = loop.run_until_complete(hello(delta))
 
-    sending_time = datetime.now().strftime("%H:%M:%S")
+    sending_time = datetime.now(tz_NY).strftime("%H:%M:%S")
 
     return jsonify({
         "data": result, 
