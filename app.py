@@ -54,6 +54,7 @@ def handle_message(message):
     print('received message: ' + message)
     send(message, broadcast=True)
 
+
 @app.route("/websocket", methods=["GET", "POST"])
 def websocket():
     return render_template("index.html")
