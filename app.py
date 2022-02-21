@@ -6,6 +6,9 @@ from flask_socketio import SocketIO, send
 from datetime import datetime
 import os
 import pytz
+import pymongo 
+import urllib
+from handle_users import register_user, login
 
 tz_NY = pytz.timezone('Asia/Kolkata')
 
@@ -13,6 +16,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 api = Api(app)
 socketio = SocketIO(app, cors_allowed_origins='*')
+
+mongodb = pymongo.MongoClient("mongodb+srv://GO_Shubham_Kumar_Product_Architect:"+urllib.parse.quote_plus("Grey@2022")+"@cluster0.qyhhq.mongodb.net/Users?retryWrites=true&w=majority")
 
 @app.route("/", methods=['GET', "POST"])
 @app.route("/sync", methods=['GET'])
@@ -48,19 +53,24 @@ async def hello(wait_time=5):
     await asyncio.sleep(wait_time)
     return "Async Request Worked!"
 
-@socketio.on('connect', namespace='/websocket')
-def on_connect():
-    print("Client connected")
+@app.route("/register", methods=["POST"])
+def handle_register():
+    user_id = request.form.get('user_id', default='', type=str)
+    age = request.form.get('age', default=0, type=int)
+    password = request.form.get('password', default='', type=str)
+    if register_user(user_id, age, password):
+        return jsonify({"data":"User Registered"}), 200
+    else:
+        return jsonify({"data":"User ID already exists"}), 400
 
-@socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
-    send(message, broadcast=True)
-
-
-@app.route("/websocket", methods=["GET", "POST"])
-def websocket():
-    return render_template("index.html")
+@app.route(rule="/login", methods=["POST"])
+def handle_login():
+    user_id = request.form.get ('user_id', default='', type=str)
+    password = request.form.get('password', default='', type=str)
+    if login(user_id, password):
+        return jsonify({"data":"Logged In"}), 200
+    else:
+        return jsonify({"data":"Invalid Credentials"}), 400
 
 
 if __name__ == "__main__":
