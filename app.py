@@ -48,6 +48,9 @@ async def hello(wait_time=5):
     await asyncio.sleep(wait_time)
     return "Async Request Worked!"
 
+@socketio.on('connect', namespace='/websocket')
+def on_connect():
+    print("Client connected")
 
 @socketio.on('message')
 def handle_message(message):
@@ -61,4 +64,7 @@ def websocket():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host="127.0.0.1", port=int(os.environ.get('PORT', 5000)))
+    HOST = os.environ.get('SERVER_HOST', '127.0.0.1')
+    PORT = int(os.environ.get('PORT', 5000))
+    print(f"Running on port {PORT}")
+    socketio.run(app, debug=True, host=HOST, port=PORT)
