@@ -14,7 +14,7 @@ def check_throttling(index = 0):
     print(response_API.json())
 
 t = []
-for i in range(1, 3):
+for i in range(1, 6):
     t.append(Thread(target=check_throttling, args = (i,), daemon=True))
     t[-1].start()
 
