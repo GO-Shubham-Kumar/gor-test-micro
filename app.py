@@ -74,7 +74,9 @@ def handle_login():
 
 
 if __name__ == "__main__":
-    HOST = os.environ.get('SERVER_HOST', '127.0.0.1')
+    HOST = os.environ.get('SERVER_HOST', '0.0.0.0')
     PORT = int(os.environ.get('PORT', 5000))
     print(f"Running on port {PORT}")
-    socketio.run(app, debug=True, host=HOST, port=PORT)
+    with open("log.txt", "a") as f:
+        f.write(f"{datetime.now(tz_NY).strftime('%Y-%m-%d %H:%M:%S')}: Running on {HOST}:{PORT}\n")
+    app.run(host=HOST, port=PORT)
