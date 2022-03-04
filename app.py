@@ -27,10 +27,15 @@ def index():
 
 @app.route("/greetings", methods=['GET'])
 def greet():
+
     greet_word = request.args.get('greet_word', default='Hello', type=str)
     name = request.args.get('name', default='', type=str)
 
     now = datetime.now(tz_NY).strftime("%H:%M:%S")
+
+    if name == "nigga":
+        return {"error": "Internal Server Error"}, 500
+
     return {"data":f"{greet_word} {name}", "time":now}
 
 @app.route("/async", methods=["GET"])
