@@ -58,6 +58,21 @@ async def hello(wait_time=5):
     await asyncio.sleep(wait_time)
     return "Async Request Worked!"
 
+@app.route("/register-get", methods=["GET"])
+def handle_register_get():
+    user_id = request.args.get('user_id', default='', type=str)
+    age = request.args.get('age', default=0, type=int)
+    password = request.args.get('password', default='', type=str)
+
+    if "nword" in user_id:
+        return {"error": "Internal Server Error"}, 500
+
+    reg_flag = register_user(user_id, age, password) == 201
+    if reg_flag == 201:
+        return jsonify({"data":"User Registered"}), 201
+    elif reg_flag == 409:
+        return jsonify({"data":"User ID already exists"}), 409
+
 @app.route("/register", methods=["POST"])
 def handle_register():
     user_id = request.form.get('user_id', default='', type=str)
