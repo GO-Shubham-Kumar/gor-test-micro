@@ -72,6 +72,13 @@ def handle_login():
     else:
         return jsonify({"data":"Invalid Credentials"}), 400
 
+@app.route(rule="/circuit", methods=["GET"])
+def handle_login():
+    flag = request.args.get ('number', default=0, type=int)
+    if flag > 0:
+        return jsonify({"error":"Internal Server Error"}), 500
+    else:
+        return jsonify({"data":"Good to go."}), 200
 
 if __name__ == "__main__":
     HOST = os.environ.get('SERVER_HOST', '0.0.0.0')
