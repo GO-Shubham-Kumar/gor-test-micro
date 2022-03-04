@@ -32,6 +32,7 @@ def greet():
     name = request.args.get('name', default='', type=str)
 
     now = datetime.now(tz_NY).strftime("%H:%M:%S")
+    print("INFO:::", datetime.now(tz_NY).strftime("%H:%M:%S") , f"{greet_word} {name}")
 
     if name == "nword":
         return {"error": "Internal Server Error"}, 500
@@ -111,4 +112,4 @@ if __name__ == "__main__":
     print(f"Running on port {PORT}")
     with open("log.txt", "a") as f:
         f.write(f"{datetime.now(tz_NY).strftime('%Y-%m-%d %H:%M:%S')}: Running on {HOST}:{PORT}\n")
-    app.run(host=HOST, port=PORT)
+    app.run(host=HOST, port=PORT, debug=True)
