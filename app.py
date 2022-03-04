@@ -73,7 +73,7 @@ def handle_login():
         return jsonify({"data":"Invalid Credentials"}), 400
 
 @app.route(rule="/circuit", methods=["GET"])
-def handle_login():
+def handle_circuit():
     flag = request.args.get ('number', default=0, type=int)
     if flag > 0:
         return jsonify({"error":"Internal Server Error"}), 500
