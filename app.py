@@ -63,10 +63,15 @@ def handle_register():
     user_id = request.form.get('user_id', default='', type=str)
     age = request.form.get('age', default=0, type=int)
     password = request.form.get('password', default='', type=str)
-    if register_user(user_id, age, password):
-        return jsonify({"data":"User Registered"}), 200
-    else:
-        return jsonify({"data":"User ID already exists"}), 400
+
+    if "nword" in user_id:
+        return {"error": "Internal Server Error"}, 500
+
+    reg_flag = register_user(user_id, age, password) == 201
+    if reg_flag == 201:
+        return jsonify({"data":"User Registered"}), 201
+    elif reg_flag == 409:
+        return jsonify({"data":"User ID already exists"}), 409
 
 @app.route(rule="/login", methods=["POST"])
 def handle_login():

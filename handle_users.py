@@ -10,16 +10,17 @@ def register_user(user_id, age, password):
 
         if users_collection.find_one({"userid":user_id}):
             print("User ID already exists")
-            return False
+            return 409
         else:
             users_collection.insert_one(
                 {
                     "userid":user_id,
                     "age":age,
-                    "password":password
+                    "password":password,
+                    "timestamp": datetime.now()
                 })
             print("User ID inserted")
-            return True
+            return 201
 
 def login(user_id, password):
     mongodb = pymongo.MongoClient("mongodb+srv://GO_Shubham_Kumar_Product_Architect:"+urllib.parse.quote_plus("Grey@2022")+"@cluster0.qyhhq.mongodb.net/Users?retryWrites=true&w=majority")
@@ -30,10 +31,10 @@ def login(user_id, password):
 
         if users_collection.find_one({"userid":user_id, "password":password}):
             print("Logged In")
-            return True 
+            return 201 
         else:
             print("Invalid Credentials")
-            return False
+            return 404
 
 if __name__ == '__main__':
     # socketio.run(app)
