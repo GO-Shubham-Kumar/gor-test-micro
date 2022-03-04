@@ -33,7 +33,7 @@ def greet():
 
     now = datetime.now(tz_NY).strftime("%H:%M:%S")
 
-    if name == "nigga":
+    if name == "nword":
         return {"error": "Internal Server Error"}, 500
 
     return {"data":f"{greet_word} {name}", "time":now}
