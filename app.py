@@ -39,6 +39,20 @@ def greet():
 
     return {"data":f"{greet_word} {name}", "time":now}
 
+@app.route("/greetings_post", methods=['POST'])
+def greet_post():
+
+    greet_word = request.form.get('greet_word', default='Hello', type=str)
+    name = request.form.get('name', default='', type=str)
+
+    now = datetime.now(tz_NY).strftime("%H:%M:%S")
+    print("INFO:::", datetime.now(tz_NY).strftime("%H:%M:%S") , f"{greet_word} {name}")
+
+    if name == "nword":
+        return {"error": "Internal Server Error"}, 500
+
+    return {"data":f"{greet_word} {name}", "time":now}
+
 @app.route("/async", methods=["GET"])
 def async_req():
     receiving_time = datetime.now(tz_NY).strftime("%H:%M:%S")

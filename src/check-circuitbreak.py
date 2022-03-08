@@ -2,10 +2,11 @@ import requests
 import json
 from datetime import datetime
 from threading import Thread
+from time import sleep
 
-words = ["", "nword", "nword", "nword", "goodword", "perfect"]
+words = ["Guru", "nword", "nword", "nword", "goodword", "perfect"]
 
-def check_throttling(word = ""):
+def check_circuitbreaker(word = ""):
     now = datetime.now()
 
     current_time = now.strftime("%H:%M:%S")
@@ -14,10 +15,15 @@ def check_throttling(word = ""):
     url = f"http://go-greetings-test.us-e2.cloudhub.io/greetings?name={word}"
     response_API = requests.get(url)
     print(response_API.json())
+    print()
 
 t = []
 for word in words:
-    # t.append(Thread(target=check_throttling, args = (i,), daemon=True))
-    #t[-1].start()
-    check_throttling(word)
+
+    check_circuitbreaker(word)
+
+t = 10
+sleep(t)
+print(f"Retry after {t} seconds")
+check_circuitbreaker("Shubham")
 
