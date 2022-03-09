@@ -42,8 +42,8 @@ def greet():
 @app.route("/greetings_post", methods=['POST'])
 def greet_post():
 
-    greet_word = request.form.get('greet_word', default='Hello', type=str)
-    name = request.form.get('name', default='', type=str)
+    greet_word = request.json['greet_word']
+    name = request.json['name']
 
     now = datetime.now(tz_NY).strftime("%H:%M:%S")
     print("INFO:::", datetime.now(tz_NY).strftime("%H:%M:%S") , f"{greet_word} {name}")
