@@ -11,7 +11,7 @@ def check_throttling(index = 0):
 
     url = "http://go-policy-test.us-e2.cloudhub.io/"
     response_API = requests.get(url)
-    print(response_API.json())
+    print(response_API.json(), response_API.status_code)
 
 t = []
 for i in range(1, 6):

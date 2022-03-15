@@ -10,7 +10,7 @@ def check_circuitbreaker(word = ""):
     now = datetime.now()
 
     current_time = now.strftime("%H:%M:%S")
-    print(f"[LOOP {word}] URL Req Made at : ", current_time)
+    print(f"[LOOP: {word}] URL Req Made at : ", current_time)
 
     url = f"http://go-greetings-test.us-e2.cloudhub.io/greetings?name={word}"
     response_API = requests.get(url)
