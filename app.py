@@ -121,7 +121,7 @@ def handle_circuit():
         return jsonify({"data":"Good to go."}), 200
 
 if __name__ == "__main__":
-    HOST = os.environ.get('SERVER_HOST', '127.0.0.1')
+    HOST = os.environ.get('SERVER_HOST', '0.0.0.0')
     PORT = int(os.environ.get('PORT', 5000))
     print(f"Running on port {PORT}")
     with open("log.txt", "a") as f:
