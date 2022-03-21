@@ -27,10 +27,30 @@ def index():
 
 @app.route("/greetings", methods=['GET'])
 def greet():
+
     greet_word = request.args.get('greet_word', default='Hello', type=str)
     name = request.args.get('name', default='', type=str)
 
     now = datetime.now(tz_NY).strftime("%H:%M:%S")
+    print("INFO:::", datetime.now(tz_NY).strftime("%H:%M:%S") , f"{greet_word} {name}")
+
+    if name == "nword":
+        return {"error": "Internal Server Error"}, 500
+
+    return {"data":f"{greet_word} {name}", "time":now}
+
+@app.route("/greetings_post", methods=['POST'])
+def greet_post():
+
+    greet_word = request.json['greet_word']
+    name = request.json['name']
+
+    now = datetime.now(tz_NY).strftime("%H:%M:%S")
+    print("INFO:::", datetime.now(tz_NY).strftime("%H:%M:%S") , f"{greet_word} {name}")
+
+    if name == "nword":
+        return {"error": "Internal Server Error"}, 500
+
     return {"data":f"{greet_word} {name}", "time":now}
 
 @app.route("/async", methods=["GET"])
@@ -53,15 +73,35 @@ async def hello(wait_time=5):
     await asyncio.sleep(wait_time)
     return "Async Request Worked!"
 
+@app.route("/register-get", methods=["GET"])
+def handle_register_get():
+    user_id = request.args.get('user_id', default='', type=str)
+    age = request.args.get('age', default=0, type=int)
+    password = request.args.get('password', default='', type=str)
+
+    if "nword" in user_id:
+        return {"error": "Internal Server Error"}, 500
+
+    reg_flag = register_user(user_id, age, password) == 201
+    if reg_flag == 201:
+        return jsonify({"data":"User Registered"}), 201
+    elif reg_flag == 409:
+        return jsonify({"data":"User ID already exists"}), 409
+
 @app.route("/register", methods=["POST"])
 def handle_register():
     user_id = request.form.get('user_id', default='', type=str)
     age = request.form.get('age', default=0, type=int)
     password = request.form.get('password', default='', type=str)
-    if register_user(user_id, age, password):
-        return jsonify({"data":"User Registered"}), 200
-    else:
-        return jsonify({"data":"User ID already exists"}), 400
+
+    if "nword" in user_id:
+        return {"error": "Internal Server Error"}, 500
+
+    reg_flag = register_user(user_id, age, password) == 201
+    if reg_flag == 201:
+        return jsonify({"data":"User Registered"}), 201
+    elif reg_flag == 409:
+        return jsonify({"data":"User ID already exists"}), 409
 
 @app.route(rule="/login", methods=["POST"])
 def handle_login():
@@ -72,11 +112,18 @@ def handle_login():
     else:
         return jsonify({"data":"Invalid Credentials"}), 400
 
+@app.route(rule="/circuit", methods=["GET"])
+def handle_circuit():
+    flag = request.args.get ('number', default=0, type=int)
+    if flag > 0:
+        return jsonify({"error":"Internal Server Error"}), 500
+    else:
+        return jsonify({"data":"Good to go."}), 200
 
 if __name__ == "__main__":
-    HOST = os.environ.get('SERVER_HOST', '0.0.0.0')
+    HOST = os.environ.get('SERVER_HOST', '127.0.0.1')
     PORT = int(os.environ.get('PORT', 5000))
     print(f"Running on port {PORT}")
     with open("log.txt", "a") as f:
         f.write(f"{datetime.now(tz_NY).strftime('%Y-%m-%d %H:%M:%S')}: Running on {HOST}:{PORT}\n")
-    app.run(host=HOST, port=PORT)
+    app.run(host=HOST, port=PORT, debug=True)
